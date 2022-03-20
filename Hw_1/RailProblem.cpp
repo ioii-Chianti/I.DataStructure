@@ -16,9 +16,6 @@ int main() {
             seq.push_back(coach);
         }
 
-        // for (vector<int>::iterator it = seq.begin(); it != seq.end(); it++)
-        //     cout << *it << " ";
-
         int index = 0, num = 1;
         while (index < n) {
             if (st.empty() || st.top() != seq[index])
@@ -29,8 +26,6 @@ int main() {
             }
             if (num > n) 
                 index++;
-
-            // cout << "index: " << index << ", num: " << num << ", flag: " << flag << endl;
         }
 
         if (st.empty())
