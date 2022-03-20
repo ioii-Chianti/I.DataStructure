@@ -43,7 +43,9 @@
     "type_traits": "c",
     "utility": "c",
     "initializer_list": "c",
-    "123.C": "cpp"
+    "123.C": "cpp",
+    "deque": "cpp",
+    "vector": "cpp"
 },
    "code-runner.runInTerminal": true,
    "code-runner.executorMap":{
