@@ -5,46 +5,49 @@
 using namespace std;
 
 vector<int> ans;
+const bool increase = true;
+const bool decrease = false;
 
-void swing(list<int> &List, bool &flag) {
-    if (flag) {
+void swing(list<int> &ls, bool &mode) {
+    if (mode) {
         // record, push, delete
-        int lastPoped = List.front();
+        int lastPoped = ls.front();
         ans.push_back(lastPoped);
-        List.pop_front();
+        ls.pop_front();
 
-        for (list<int>::iterator it = List.begin(); it != List.end(); it++) {
+        for (list<int>::iterator it = ls.begin(); it != ls.end(); it++) {
             if (*it > lastPoped) {
                 list<int>::iterator toDelete = it;
                 it--;
                 // record, push, delete
                 lastPoped = *toDelete;
                 ans.push_back(lastPoped);
-                List.erase(toDelete);
+                ls.erase(toDelete);
             }
         }
-        flag = false;
+        mode = decrease;
     } else {
         // record, push, delete
-        int lastPoped = List.back();
+        int lastPoped = ls.back();
         ans.push_back(lastPoped);
-        List.pop_back();
+        ls.pop_back();
 
-        for (list<int>::iterator it = prev(List.end()); it != List.begin(); it--) {
+        for (list<int>::iterator it = prev(ls.end()); it != ls.begin(); it--) {
             if (*it < lastPoped) {
                 list<int>::iterator toDelete = it;
                 it++;
                 // record, push, delete
                 lastPoped = *toDelete;
                 ans.push_back(lastPoped);
-                List.erase(toDelete);
+                ls.erase(toDelete);
             }
         }
-        if (!List.empty() && List.front() < lastPoped) {
-            ans.push_back(List.front());
-            List.pop_front();
+        // remember the first elememt
+        if (!ls.empty() && ls.front() < lastPoped) {
+            ans.push_back(ls.front());
+            ls.pop_front();
         }
-        flag = true;
+        mode = increase;
     }
 }
 
@@ -53,21 +56,21 @@ int main() {
     cin >> T;
     while (T--) {
         // init and sort list
-        list<int> List;
+        list<int> ls;
         int len, input;
         cin >> len;
         for (int i = 0; i < len; i++) {
             cin >> input;
-            List.push_back(input);
+            ls.push_back(input);
         }
-        List.sort();
+        ls.sort();
 
-        bool flag = true;
-        while (!List.empty())
-            swing(List, flag);
+        bool mode = increase;
+        while (!ls.empty())
+            swing(ls, mode);
             
         // print and clear ans
-        for (auto it : ans)
+        for (int it : ans)
             cout << it << ' ';
         cout << '\n';
         ans.clear();
