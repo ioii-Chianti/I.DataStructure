@@ -3,9 +3,8 @@
 #include <queue>
 using namespace std;
 
-const int black = 0;
-const int white = 1;
-const int unknown = 2;
+/* Concept: Use BFS to traverse graph,
+   when queue is empty, there is one connected component */
 
 struct Node {
     int data;
@@ -17,44 +16,51 @@ struct Node {
 
 int numVertex, numEdge;
 
+int connectedComponent(vector<Node *> heads) {
+    int cnt = 0;
+    vector<bool> visited(numVertex + 1, false);
+    queue<int> Queue;
+
+    for (int i = 1; i < numVertex + 1; i++) {
+        if (visited[i])
+            continue;
+
+        /* BFS */
+        // push the starting point of the component
+        Queue.push(i);
+        visited[i] = true;
+
+        while (true) {
+            int lastPoped = Queue.front();
+            Queue.pop();
+            // enqueue all neighbors of current node
+            Node *node = heads[lastPoped];
+            while (node->data) {
+                if (!visited[node->data]) {
+                    Queue.push(node->data);
+                    visited[node->data] = true;
+                }
+                node = node->next;
+            }
+            // end traversal of this connected component
+            if (Queue.empty()) {
+                cnt++;
+                break;
+            }
+        }
+    }
+    return cnt;
+}
+
+// new edges for both x and y, adjList[i] points to the head of list
+// b(adj[x]) -> a -> 0
+// y -> b(adj[x]) -> a -> 0
+// y(adj[x]) -> b -> a -> 0
 void newEdge(int x, int y, vector<Node *> &adjList) {
     Node *newNode = new Node(y, adjList[x]);
     adjList[x] = newNode;
     newNode = new Node(x, adjList[y]);
     adjList[y] = newNode;
-}
-
-string bipartiteCheck(vector<Node *> heads) {
-    vector<int> colors(numVertex + 1, unknown);
-    queue<int> Queue;
-
-    for (int i = 1; i < numVertex + 1; i++) {
-        if (colors[i] != unknown)
-            continue;
-
-        /* BFS */
-        // the starting point of the connected component
-        Queue.push(i);
-        colors[i] = black;
-        while (!Queue.empty()) {
-            int lastPoped = Queue.front();
-            Queue.pop();
-
-            Node *node = heads[lastPoped];
-            while (node->data) {
-                if (colors[node->data] == colors[lastPoped])
-                    return "NO";
-                
-                // enqueue not visited node and color it
-                if (colors[node->data] == unknown) {
-                    Queue.push(node->data);
-                    colors[node->data] = (colors[lastPoped] == black) ? white : black;
-                }
-                node = node->next;
-            }
-        }
-    }
-    return "YES";
 }
 
 int main() {
@@ -70,6 +76,5 @@ int main() {
         cin >> x >> y;
         newEdge(x, y, adjList);
     }
-    
-    cout << bipartiteCheck(adjList);
+    cout << connectedComponent(adjList);
 }
