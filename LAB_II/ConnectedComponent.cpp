@@ -21,7 +21,7 @@ int connectedComponent(vector<Node *> heads) {
     vector<bool> visited(numVertex + 1, false);
     queue<int> Queue;
 
-    for (int i = 1; i < numVertex + 1; i++) {
+    for (int i = 1; i <= numVertex; i++) {
         if (visited[i])
             continue;
 
@@ -68,7 +68,7 @@ int main() {
     vector<Node *> adjList(numVertex + 1);
 
     // init tail for all adjList w/ data 0
-    for (int i = 0; i < numVertex + 1; i++)
+    for (int i = 0; i <= numVertex; i++)
         adjList[i] = new Node();
 
     for (int i = 0; i < numEdge; i++) {
